@@ -58,9 +58,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #define		RX					1
 #define		TX					0
 
-typedef void (*txStatus_callback)(uns16 messageID);
 typedef void (*packetReturn_callback)(uns8* packet, int packetLength);
-
 
 class CoapProtocol : public WiFiUDP {
 	
