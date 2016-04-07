@@ -69,8 +69,8 @@ void makeOutgoingCONPacket() {
   packet.addOption(OPT_URI_PATH, 4, "demo");
   packet.addOption(OPT_URI_QUERY, 6, "test=1");
   packet.addPayload(13, "payload text");
-  packet.printPacket();
-  packet.readPacket();
+  packet.printPacket(); //Prints packet contents in HEX
+  packet.readPacket();  //Prints packet contents in readable form
 }
 
 
