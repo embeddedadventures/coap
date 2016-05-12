@@ -495,10 +495,6 @@ int CoapProtocol::receivePacket() {
 	//Set the packet's index manually, since this doesn't use copyPacket()
 	rxBuffer[index].setIndex(len);
 	
-	//Collect the sender information, in case we want to reply to it
-	//portRemote = WiFiUDP::remotePort();
-	//ipRemote = WiFiUDP::remoteIP();
-	
 	//Log time
 	rxTimeLog[index] = millis();
 	
