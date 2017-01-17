@@ -21,7 +21,7 @@ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
 LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+sgn16ERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
 THE POSSIBILITY OF SUCH DAMAGE.
@@ -34,13 +34,15 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __COAP-PACKET_h
 #define __COAP-PACKET_h
 
-#define		uns8			unsigned char
-#define		uns16			unsigned int
-#define		uns32			unsigned long
-#define		VERSION			0x01
+#define		uns8			usgn168_t
+#define		uns16			usgn1616_t
+#define		sgn16			sgn1616_t
+#define		uns32			usgn1632_t
+
 #define 	MAX_SIZE		1250
 #define		MAX_TOKENSIZE	8
 
+#define		COAP_VERSION	0x01
 #define 	PAYLOAD			0xFF
 #define		MAX_OPTIONS		100
 
@@ -75,7 +77,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #define CODE_REQ_TOO_LARGE	0x8D
 #define CODE_FORMAT_UNSUPP	0x8F
 //Response codes - server errors
-#define	CODE_INT_SERVER_ERR	0xA0
+#define	CODE_sgn16_SERVER_ERR	0xA0
 #define CODE_NOT_IMPLEM		0xA1
 #define CODE_BAD_GATE		0xA2
 #define CODE_SVC_UNAVAIL	0xA3
@@ -101,75 +103,89 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #define OPT_SIZE1			60
 
 typedef struct {
-	uns8	optionNumbers[MAX_OPTIONS];		//Stores option number
-	uns8	*paramAddr[MAX_OPTIONS];		//Stores address of first byte of parameter
-	int		paramLength[MAX_OPTIONS];		//Stores length of param
-	int		cursor;
-}	options_struct;
+	uns8		coap_version;
+	uns8		coap_type;
+	uns8		token_length;
+	uns8		coap_code;
+	uns16		message_id;
+}	coap_header_struct;
+
+typedef struct {
+	uns8		optionNumbers[MAX_OPTIONS];		//Stores option number
+	uns8		*paramAddr[MAX_OPTIONS];		//Stores address of first byte of parameter
+	sgn16		paramLength[MAX_OPTIONS];		//Stores length of param
+	sgn16		cursor;
+}	coap_options_struct;
+
+
+
+typedef struct {
+	
+}	coap_token_struct;
 
 class CoapPacket {
 private:
 	options_struct	packetOptions;
 
-	int		index;
-	uns8	packetBuffer[MAX_SIZE];
-	int		packetLength;
+	sgn16		index;
+	uns8		packetBuffer[MAX_SIZE];
+	sgn16		packetLength;
 	
-	int		numOptions;
-	uns8	lastOptionNumber;
+	sgn16		numOptions;
+	uns8		lastOptionNumber;
 	
 	bool	processDelta(uns8 optNum);
-	void	processLength(int len);
+	void	processLength(sgn16 len);
 	
-	void	printHeader();
-	void	printTokens();
-	void	printOptions();
-	void	printPayload();
+	void	prsgn16Header();
+	void	prsgn16Tokens();
+	void	prsgn16Options();
+	void	prsgn16Payload();
 	
 	//Packet sub-section index
-	int		parser;
-	int		hdrIndex;
-	int 	tknIndex;
-	int		payloadIndex;
-	int 	optionStartIndex;
-	int		optionIndex;
+	sgn16		parser;
+	sgn16		hdrIndex;
+	sgn16 	tknIndex;
+	sgn16		payloadIndex;
+	sgn16 	optionStartIndex;
+	sgn16		optionIndex;
 	
 
 public:
 	CoapPacket();
 	~CoapPacket();
-	int		begin();
+	sgn16		begin();
 	
 	//Accessors
-	int		getPacketLength();
-	uns8*	getPacket();
-	uns8*	getTokens();
-	uns8	getTokenLength();
-	uns8	getResponseCode();
-	uns8*	getPayloadAddr();
-	int		getPayloadIndex();
-	uns16	getMessageType();
-	uns16	getID();
+	sgn16		getPacketLength();
+	uns8*		getPacket();
+	uns8*		getTokens();
+	uns8		getTokenLength();
+	uns8		getResponseCode();
+	uns8*		getPayloadAddr();
+	sgn16		getPayloadIndex();
+	uns16		getMessageType();
+	uns16		getID();
 	
 	//Packet building
-	int		addHeader(uns8 type, uns8 code, uns16 id);
-	int		addTokens(int numTokens, uns8 *tokenValue);
-	int		addPayload(int len, const char *payloadValue);
-	int		addOption(uns8 optNum, int len, const char *param);
-	int		copyPacket(uns8 *rx, int len);
-	void	setIndex(int i);
+	sgn16		addHeader(uns8 type, uns8 code, uns16 id);
+	sgn16		addTokens(sgn16 numTokens, uns8 *tokenValue);
+	sgn16		addPayload(sgn16 len, const char *payloadValue);
+	sgn16		addOption(uns8 optNum, sgn16 len, const char *param);
+	sgn16		copyPacket(uns8 *rx, sgn16 len);
+	void		setIndex(sgn16 i);
 	
 	//Readable coap packet
-	int		parsePacket();
-	int		printPacket();
-	int		readPacket();
+	sgn16		parsePacket();
+	sgn16		prsgn16Packet();
+	sgn16		readPacket();
 	
 	//Option access
-	int		optionStart();
-	int		getNextOption();
-	int		getOptionCount();
-	uns8*	getOptionParameter();
-	int		getParameterLength();
+	sgn16		optionStart();
+	sgn16		getNextOption();
+	sgn16		getOptionCount();
+	uns8*		getOptionParameter();
+	sgn16		getParameterLength();
 };	
 
 

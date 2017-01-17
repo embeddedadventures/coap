@@ -1,3 +1,9 @@
+# CoAP Protothread Branch
+This is an in-the-works improvement on the current coap packet and protocol library. Goals for improvement include:
+ * coap-packet function improvements
+ * implementing protothreading in coap-protocol functions that handle packet buffers 
+ 
+
 # CoAP - Constrained Application Protocol 
 The Constrained Application Protocol is a communication protocol designed for resource-constrained devices. It gives a simple request/response interaction, can be easily translated to HTTP, and has very little overhead. More information can be read about CoAP <a href="https://tools.ietf.org/html/rfc7252">here</a>.
 
