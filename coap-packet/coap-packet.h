@@ -34,16 +34,16 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __COAP-PACKET_h
 #define __COAP-PACKET_h
 
-#define		uns8			uint8_t
-#define		uns16			uint16_t
-#define		sgn16			int16_t
-#define		uns32			int32_t
+#define		uns8			usgn168_t
+#define		uns16			usgn1616_t
+#define		sgn16			sgn1616_t
+#define		uns32			usgn1632_t
 
 #define 	MAX_SIZE		1250
 #define		MAX_TOKENSIZE	8
 
 #define		COAP_VERSION	0x01
-#define 	PAYLOAD_MARK	0xFF
+#define 	PAYLOAD			0xFF
 #define		MAX_OPTIONS		100
 
 //Transaction types
@@ -102,65 +102,90 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #define OPT_PROXY_SCH		39
 #define OPT_SIZE1			60
 
-/*typedef struct {
+typedef struct {
+	uns8		coap_version;
+	uns8		coap_type;
+	uns8		token_length;
+	uns8		coap_code;
+	uns16		message_id;
+}	coap_header_struct;
+
+typedef struct {
 	uns8		optionNumbers[MAX_OPTIONS];		//Stores option number
 	uns8		*paramAddr[MAX_OPTIONS];		//Stores address of first byte of parameter
 	sgn16		paramLength[MAX_OPTIONS];		//Stores length of param
 	sgn16		cursor;
-}	coap_options_struct;*/
+}	coap_options_struct;
 
 
-//This struct is for 1 option
+
 typedef struct {
-	uns8	*option_ptr;
-	uns8	option_number;
-	uns16	option_length;
-	uns8	*option_value_ptr;
-}	coap_option_struct;
-
+	
+}	coap_token_struct;
 
 class CoapPacket {
 private:
-	uns8	pkt_buffer[MAX_SIZE];
-	sgn16	pkt_length;
-	sgn16	pkt_cursor;
+	options_struct	packetOptions;
 
-	uns8	token_length;
-	uns8	coap_code;
-	uns8	coap_type;
-	uns16	coap_msg_id;
-	uns8	num_options;
+	sgn16		index;
+	uns8		packetBuffer[MAX_SIZE];
+	sgn16		packetLength;
 	
-	uns8	*tkn_ptr;
-	uns8	*option_ptr;
-	uns8	*payload_ptr;
+	sgn16		numOptions;
+	uns8		lastOptionNumber;
 	
+	bool	processDelta(uns8 optNum);
+	void	processLength(sgn16 len);
+	
+	void	prsgn16Header();
+	void	prsgn16Tokens();
+	void	prsgn16Options();
+	void	prsgn16Payload();
+	
+	//Packet sub-section index
+	sgn16		parser;
+	sgn16		hdrIndex;
+	sgn16 	tknIndex;
+	sgn16		payloadIndex;
+	sgn16 	optionStartIndex;
+	sgn16		optionIndex;
+	
+
 public:
 	CoapPacket();
 	~CoapPacket();
+	sgn16		begin();
 	
-	void	begin();
-	uns8	addHeader(uns8 type, uns8 code, uns16 msg_id);
-	uns8	addTokens(uns8 tknLen, uns8 *tknValue);
-	uns8	addOption(uns8 optNum, uns16 optLen, const char *optParam);
-	uns8	addPayload(uns16 payloadLen, uns8 *payloadValue);
+	//Accessors
+	sgn16		getPacketLength();
+	uns8*		getPacket();
+	uns8*		getTokens();
+	uns8		getTokenLength();
+	uns8		getResponseCode();
+	uns8*		getPayloadAddr();
+	sgn16		getPayloadIndex();
+	uns16		getMessageType();
+	uns16		getID();
 	
-	uns16	copy(uns8 *pktPtr, uns16 pktLen);
+	//Packet building
+	sgn16		addHeader(uns8 type, uns8 code, uns16 id);
+	sgn16		addTokens(sgn16 numTokens, uns8 *tokenValue);
+	sgn16		addPayload(sgn16 len, const char *payloadValue);
+	sgn16		addOption(uns8 optNum, sgn16 len, const char *param);
+	sgn16		copyPacket(uns8 *rx, sgn16 len);
+	void		setIndex(sgn16 i);
 	
-	uns16	size();
-	uns8	code();
-	uns8	type();
-	uns16	messageId();
+	//Readable coap packet
+	sgn16		parsePacket();
+	sgn16		prsgn16Packet();
+	sgn16		readPacket();
 	
-	uns8*	packetPtr();
-	uns8*	getTokenPtr();
-	uns8*	getPayloadPtr();
-	
-	
-	
-	
-
-
+	//Option access
+	sgn16		optionStart();
+	sgn16		getNextOption();
+	sgn16		getOptionCount();
+	uns8*		getOptionParameter();
+	sgn16		getParameterLength();
 };	
 
 
